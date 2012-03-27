@@ -3,8 +3,7 @@
 #include <iostream>
 #include <string>
 
-//#define SERVER_IP "130.100.97.29"
-#define SERVER_IP "134.138.79.101"
+#define SERVER_IP "130.100.97.29"
 #define SERVER_PORT 50001
 
 int main (int argc, char *argv[])
