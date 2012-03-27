@@ -45,7 +45,7 @@ namespace sockwrpr
   bool
   ISocketBase::create()
   {
-    mSocketNumber = socket(AF_INET, SOCK_STREAM, 0);
+    mSocketNumber = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if ( !isValid() )
       return false;
@@ -53,7 +53,11 @@ namespace sockwrpr
 
     // TIME_WAIT - argh
     int on = 1;
-    if ( setsockopt( mSocketNumber, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on)) == -1 )
+    if ( setsockopt(mSocketNumber,
+                    SOL_SOCKET,
+                    SO_REUSEADDR,
+                    (const char*)&on,
+                    sizeof(on)) == -1 )
       return false;
 
 

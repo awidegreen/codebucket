@@ -22,7 +22,7 @@ namespace sockwrpr
     /**
      * Accepts incoming connections.
      */
-    bool accept(ISocketBase& socket) const;
+    bool accept(ServerSocket& newSocket) const;
   public:
     /**
      * ctor
@@ -46,7 +46,7 @@ namespace sockwrpr
     /**
      * Interface for accepting a socket.
      */
-    void accept(ServerSocket& socket);
+    void acceptSocket(ServerSocket& socket);
     
   };
 } // end namespace

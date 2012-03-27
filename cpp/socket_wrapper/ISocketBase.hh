@@ -51,7 +51,7 @@ namespace sockwrpr
     {
       return ( mSocketNumber != -1 );
     }
-
+     
     /**
      * Set the socket to nonblocking.
      */

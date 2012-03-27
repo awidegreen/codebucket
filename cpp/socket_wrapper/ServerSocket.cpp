@@ -63,11 +63,11 @@ namespace sockwrpr
 
     mSocketAddress.sin_family = AF_INET;
     mSocketAddress.sin_addr.s_addr = INADDR_ANY;
-    mSocketAddress.sin_port = htons ( port );
+    mSocketAddress.sin_port = htons(port);
 
-    int bind_return = ::bind(mSocketAddress,
+    int bind_return = ::bind(mSocketNumber,
                              (sockaddr*)&mSocketAddress,
-			     sizeof(mSocketAddress) );
+                             sizeof(mSocketAddress) );
 
     if ( bind_return == -1 )
     {
@@ -89,7 +89,7 @@ namespace sockwrpr
       return false;
     }
 
-    int listen_return = ::listen(mSocketAddress, MAXCONNECTIONS);
+    int listen_return = ::listen(mSocketNumber, MAXCONNECTIONS);
 
 
     if ( listen_return == -1 )
@@ -106,14 +106,14 @@ namespace sockwrpr
  */
 
   bool
-  ServerSocket::accept ( ISocketBase& newSocket ) const
+  ServerSocket::accept(ServerSocket& newSocket) const
   {
     int addrLength = sizeof(mSocketAddress);
-    newSocket.mSocketAddress = ::accept(mSocketAddress,
-                                        (sockaddr*)&mSocketAddress,
-                                        (socklen_t*) &addrLength);
+    newSocket.mSocketNumber = ::accept(mSocketNumber,
+                                       (sockaddr*)&mSocketAddress,
+                                       (socklen_t*) &addrLength);
 
-    if ( newSocket.mSocketAddress <= 0 )
+    if ( newSocket.isValid() )
       return false;
     else
       return true;
@@ -154,9 +154,9 @@ namespace sockwrpr
  */
 
   void
-  ServerSocket::accept(ServerSocket& socket)
+  ServerSocket::acceptSocket(ServerSocket& socket)
   {
-    if ( !accept(sock) )
+    if ( !accept(socket) )
     {
       throw SocketException("Could not accept socket.");
     }

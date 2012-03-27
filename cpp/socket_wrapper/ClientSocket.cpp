@@ -9,6 +9,7 @@
 
 #include <arpa/inet.h>
 #include <errno.h>
+#include <iostream>
 
 namespace sockwrpr
 {
@@ -22,7 +23,7 @@ namespace sockwrpr
     {
       throw SocketException("Could not create client socket.");
     }
-
+    
     if ( !connect(host, port) )
     {
       throw SocketException("Could not connect to host/port");
@@ -39,19 +40,36 @@ namespace sockwrpr
     if ( !isValid() )
       return false;
 
+    std::cout << "Try to connect to " << host << " on port " << port << std::endl;
+
     mSocketAddress.sin_family = AF_INET;
-    mSocketAddress.sin_port = htons( port );
+    // sets the port
+    mSocketAddress.sin_port = htons(port);
+    // ip addr
+    //mSocketAddress.sin_addr.s_addr = inet_addr(host.c_str());
 
-    int status = inet_pton( AF_INET, host.c_str(), &mSocketAddress.sin_addr );
+    // converts string to ip-addr
+    int status = inet_pton(AF_INET, host.c_str(), &mSocketAddress.sin_addr);
 
-    if ( errno == EAFNOSUPPORT ) return false;
+    //std::cout << "connect with mSocketNumber: " << mSocketNumber << std::endl;
+    status = ::connect(mSocketNumber,
+                       reinterpret_cast<sockaddr*>(&mSocketAddress),
+                       sizeof(mSocketAddress));
 
-    status = ::connect ( mSocketNumber, (sockaddr*)&mSocketAddress, sizeof(mSocketAddress) );
+    
+    if ( errno == EAFNOSUPPORT )
+    {
+       return false;
+    }
 
     if ( status == 0 )
-      return true;
+       return true;
     else
-      return false;
+    {
+       std::cout << "connect status return: " << status
+                 << " errno: " << errno << std::endl;
+       return false;
+    }
   }
   
 /*
